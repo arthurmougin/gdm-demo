@@ -10,9 +10,11 @@
     <script src="https://unpkg.com/aframe-layout-component@5.3.0/dist/aframe-layout-component.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/nunjucks/2.3.0/nunjucks.min.js"></script>
     <script src="https://unpkg.com/aframe-template-component@3.2.1/dist/aframe-template-component.min.js"></script>
-    <script type="module" crossorigin src="/gdm-demo/assets/index-DlK7erF9.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+    <script type="module" crossorigin src="/gdm-demo/assets/index-DiaAmKFZ.js"></script>
   </head>
   <body>
+    <audio id="audio" autoplay></audio> <!-- Remove autoplay when AFrame adds support for dynamic audio -->
     <a-scene background="color: #FAFAFA">
       <a-assets>
         <a-asset-item id="island" src="models/island.gltf"></a-asset-item>
@@ -26,23 +28,26 @@
       <a-entity id="island" 
         gltf-model="models/island.gltf" 
         position="4.59 -6.76 1.02"
-        animation="startEvent:hideIsland; property:position; to:4.59 -100 1.02; easing:easeInCubic; autoplay:false"
-        animation="startEvent:showIsland; property:position; to:4.59 -6.76 1.02; easing:easeInCubic; autoplay:false"
+        animation__hide="startEvents: hideIsland; property:position; to:4.59 -100 1.02; easing:easeInCubic; autoplay:false"
+        animation__show="startEvents: showIsland; property:position; to:4.59 -6.76 1.02; easing:easeInCubic; autoplay:false"
+        log
         ></a-entity>
-      <a-entity id="bands" 
+      <a-entity id="bandsparent" 
         template="src: #bands" 
         layout="type: circle; radius: 32; plane: xz" 
         rotation="0 89.367 0" 
         position="0 15 0"
-        animation="startEvent:showBands;property:position; to:0 1 0; easing:easeOutCubic; autoplay:false"
-        animation="startEvent:hideBands;property:position; to:0 15 0; easing:easeOutCubic; autoplay:false"
+        animation__show="startEvents: showBands; property:position; to:0 1 0; easing:easeOutCubic; autoplay:false"
+        animation__hide="startEvents: hideBands; property:position; to:0 15 0; easing:easeOutCubic; autoplay:false"
+        animation__left="startEvents: leftbands; property:rotation; from: 0 0 0; to: 0 18 0; easing:easeInOutCubic; autoplay:false"
+        animation__left="startEvents: rightbands; property:rotation; from: 0 0 0; to: 0 -18 0; easing:easeInOutCubic; autoplay:false"
+        log
         ></a-entity>
       <a-entity id="arena" 
         gltf-model="models/arena.gltf" 
         position="0 0.47 -40.31"
         >
-        <a-plane 
-          class="hyperbeam collidable" 
+        <a-plane class="hyperbeam interactable" 
           position="0 8.60417 4.70419" 
           rotation="20.480949344746406 179.9998479605043 0" 
           width="16" 
@@ -51,8 +56,42 @@
           sound="autoplay: true; refDistance: 0.2; rolloffFactor: 3" 
           hyperbeam="" 
           scale="0.5 0.5 0.5"></a-plane>
+        <a-box id="upButton"
+          class="interactable"
+          color="blue"
+          proxy-event__band="event: click; to: #bandsparent; as: showBands"
+          proxy-event__island="event: click; to: #island; as: hideIsland"
+          position="-2.5 0.8 6"
+          scale="0.5 0.5 0.5"
+          log
+          ></a-box>
+        <a-box id="downButton"
+          class="interactable"
+          color="red"
+          proxy-event__band="event: click; to: #bandsparent; as: hideBands"
+          proxy-event__island="event: click; to: #island; as: showIsland"
+          position="-2.5 0.2 6"
+          scale="0.5 0.5 0.5"
+          log
+          ></a-box>
+          <a-box id="left"
+            class="interactable"
+            color="green"
+            proxy-event__band="event: click; to: #bandsparent; as: leftbands"
+            position="-2 0.4 6"
+            scale="0.5 0.5 0.5"
+            log
+            ></a-box>
+          <a-box id="right"
+            class="interactable"
+            color="green"
+            proxy-event__band="event: click; to: #bandsparent; as: rightbands"
+            position="2 0.4 6"
+            scale="0.5 0.5 0.5"
+            log
+            ></a-box>
       </a-entity>
-      <a-camera cursor="rayOrigin: mouse" raycaster="objects: .collidable" reverse-mouse-drag="true"></a-camera>
+      <a-camera cursor="rayOrigin: mouse" raycaster="objects: .interactable" reverse-mouse-drag="true"></a-camera>
       <a-entity id="sky" environment="ground:none;"></a-entity>
     </a-scene>
     <div id="hbcontainer"></div>
