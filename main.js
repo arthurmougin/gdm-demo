@@ -30,6 +30,7 @@ AFRAME.registerComponent("hyperbeam", {
 					Authorization:
 						"Bearer sk_test__v-H_30aF7_jV9_EDtXe6yGQGA1J5Ie0TTzCiEcmYxg",
 					"Content-Type": "application/json",
+                    'mode':'cors'
 				},
 				body: `{
                     "start_url":"https://leadxp.fr",
