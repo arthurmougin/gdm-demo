@@ -6,9 +6,6 @@ AFRAME.registerComponent("hyperbeam", {
 		// Manipulate and set the mesh
 		const geometry = this.el.getObject3D("mesh").geometry;
 		const { width, height } = geometry.parameters;
-		// Need to offset for Three.js left-handed coordinate system
-		// https://stackoverflow.com/questions/1263072/changing-a-matrix-from-right-handed-to-left-handed-coordinate-system
-		// Apparently this isn't needed for Firefox, but it's need for Firefox if using Three.js directly without AFrame?
 		if (!navigator.userAgent.includes("Firefox")) {
 			geometry.rotateZ(Math.PI);
 			geometry.rotateY(Math.PI);
@@ -27,18 +24,9 @@ AFRAME.registerComponent("hyperbeam", {
 			const options = {
 				method: "POST",
 				headers: {
-					Authorization:
-						"Bearer sk_test__v-H_30aF7_jV9_EDtXe6yGQGA1J5Ie0TTzCiEcmYxg",
-					"Content-Type": "application/json",
-                    'mode':'no-cors'
+					Authorization: "Bearer sk_test__v-H_30aF7_jV9_EDtXe6yGQGA1J5Ie0TTzCiEcmYxg"
 				},
-				body: `{
-                    "start_url":"https://leadxp.fr",
-                    "kiosk":true,
-                    "ublock":true,
-                    "webgl":true,
-                    "hide_cursor":true,
-                }`,
+				body: `{"start_url":"https://leadxp.fr","kiosk":true,"ublock":true,"webgl":true,"hide_cursor":true,}`,
 			};
 			const req = await fetch("https://engine.hyperbeam.com/v0/vm", options);
 			if (req.status >= 400) {
