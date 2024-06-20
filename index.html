@@ -40,7 +40,16 @@
         gltf-model="models/arena.gltf" 
         position="0 0.47 -40.31"
         >
-        
+        <a-plane 
+          class="hyperbeam collidable" 
+          position="0 8.60417 4.70419" 
+          rotation="20.480949344746406 179.9998479605043 0" 
+          width="16" 
+          height="9" 
+          color="#000000" 
+          sound="autoplay: true; refDistance: 0.2; rolloffFactor: 3" 
+          hyperbeam="" 
+          scale="0.5 0.5 0.5"></a-plane>
       </a-entity>
       <a-camera cursor="rayOrigin: mouse" raycaster="objects: .collidable" reverse-mouse-drag="true"></a-camera>
       <a-entity id="sky" environment="ground:none;"></a-entity>
