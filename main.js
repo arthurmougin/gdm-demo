@@ -20,30 +20,17 @@ AFRAME.registerComponent("hyperbeam", {
 		// Create a Hyperbeam computer
 		let embedURL = ""; // Running locally and you have an embed URL? Set it here
 		if (embedURL === "") {
-			const room = location.pathname.substring(1);
-			const options = {
-				method: "POST",
-				headers: {
-					Authorization: "Bearer sk_test__v-H_30aF7_jV9_EDtXe6yGQGA1J5Ie0TTzCiEcmYxg"
-				},
-				body: `{"start_url":"https://leadxp.fr","kiosk":true,"ublock":true,"webgl":true,"hide_cursor":true,}`,
-			};
-			const req = await fetch("https://engine.hyperbeam.com/v0/vm", options);
+			const room = "gdm-demo"//location.pathname.substring(1)
+			const req = await fetch("https://demo-api.tutturu.workers.dev/" + room)
 			if (req.status >= 400) {
-				alert(
-					"We are out of demo servers! Visit hyperbeam.dev to get your own API key"
-				);
-				return;
+			  alert("We are out of demo servers! Visit hyperbeam.dev to get your own API key")
+			  return
 			}
-			const body = await req.json();
+			const body = await req.json()
 			if (body.room !== room) {
-				history.replaceState(
-					null,
-					null,
-					"/" + body.room + location.search
-				);
+			  history.replaceState(null, null, "/" + body.room + location.search)
 			}
-			embedURL = body.url;
+			embedURL = body.url
 		}
 
 		// Render the Hyperbeam computer
@@ -105,3 +92,13 @@ AFRAME.registerComponent("hyperbeam", {
 		});
 	},
 });
+
+AFRAME.registerComponent("log", {
+	init() {
+		this.el.addEventListener("click",(e)=>{console.log(e)})
+		this.el.addEventListener("hideIsland",(e)=>{console.log(e)})
+		this.el.addEventListener("showIsland",(e)=>{console.log(e)})
+		this.el.addEventListener("showBands",(e)=>{console.log(e)})
+		this.el.addEventListener("hideBands",(e)=>{console.log(e)})
+	}
+})
