@@ -20,17 +20,25 @@ AFRAME.registerComponent("hyperbeam", {
 		// Create a Hyperbeam computer
 		let embedURL = ""; // Running locally and you have an embed URL? Set it here
 		if (embedURL === "") {
-			const room = "gdm-demo"//location.pathname.substring(1)
-			const req = await fetch("https://demo-api.tutturu.workers.dev/" + room)
+			const room = "gdm-demo"; //location.pathname.substring(1)
+			const req = await fetch(
+				"https://demo-api.tutturu.workers.dev/" + room
+			);
 			if (req.status >= 400) {
-			  alert("We are out of demo servers! Visit hyperbeam.dev to get your own API key")
-			  return
+				alert(
+					"We are out of demo servers! Visit hyperbeam.dev to get your own API key"
+				);
+				return;
 			}
-			const body = await req.json()
+			const body = await req.json();
 			if (body.room !== room) {
-			  history.replaceState(null, null, "/" + body.room + location.search)
+				history.replaceState(
+					null,
+					null,
+					"/" + body.room + location.search
+				);
 			}
-			embedURL = body.url
+			embedURL = body.url;
 		}
 
 		// Render the Hyperbeam computer
@@ -95,10 +103,67 @@ AFRAME.registerComponent("hyperbeam", {
 
 AFRAME.registerComponent("log", {
 	init() {
-		this.el.addEventListener("click",(e)=>{console.log(e)})
-		this.el.addEventListener("hideIsland",(e)=>{console.log(e)})
-		this.el.addEventListener("showIsland",(e)=>{console.log(e)})
-		this.el.addEventListener("showBands",(e)=>{console.log(e)})
-		this.el.addEventListener("hideBands",(e)=>{console.log(e)})
-	}
-})
+		this.el.addEventListener("click", (e) => {
+			console.log(e);
+		});
+		this.el.addEventListener("hideIsland", (e) => {
+			console.log(e);
+		});
+		this.el.addEventListener("showIsland", (e) => {
+			console.log(e);
+		});
+		this.el.addEventListener("showBands", (e) => {
+			console.log(e);
+		});
+		this.el.addEventListener("hideBands", (e) => {
+			console.log(e);
+		});
+	},
+});
+
+AFRAME.registerComponent("regie", {
+	events: {
+		summon: function (evt) {
+		  console.dir(this.el.sceneEl.camera.el)
+		  const camera = this.el.sceneEl.camera;
+		  if(!camera)return;
+		  camera.parent = this.el.object3D;
+		  camera.position.x = 0;
+		  camera.position.y = 0;
+		  camera.position.z = 0;
+		  camera.rotation.x = 0;
+		  camera.rotation.y = 0;
+		  camera.rotation.z = 0;
+		}
+	  },
+	init: function () {
+		this.system.registerMe(this.el);
+	},
+
+	remove: function () {
+		this.system.unregisterMe(this.el);
+	},
+
+	
+});
+
+AFRAME.registerSystem("regie", {
+	init: function () {
+		this.entities = [];
+		document.addEventListener("keydown",(e)=>{
+			if(e.code.startsWith("Digit")){
+				const number = Number.parseInt(e.code.replace("Digit",""))
+				this.entities[number-1]?.emit("summon");
+			}
+		})
+	},
+
+	registerMe: function (el) {
+		this.entities.push(el);
+	},
+
+	unregisterMe: function (el) {
+		var index = this.entities.indexOf(el);
+		this.entities.splice(index, 1);
+	},
+});
