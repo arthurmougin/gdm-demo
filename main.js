@@ -1,6 +1,6 @@
-//sk_test__v-H_30aF7_jV9_EDtXe6yGQGA1J5Ie0TTzCiEcmYxg
 const HyperbeamPromise = import("@hyperbeam/web");
 
+//Code from Hyperbeam's Aframe Example, prior attempts clearely showed that some part of this code should happen server side to implement the best practices
 AFRAME.registerComponent("hyperbeam", {
 	async init() {
 		// Manipulate and set the mesh
@@ -152,6 +152,7 @@ AFRAME.registerSystem("regie", {
 		this.entities = [];
 		document.addEventListener("keydown",(e)=>{
 			if(e.code.startsWith("Digit")){
+				//numbers will have a code like "Digit0" to "Digit9" but we wont use the number 0
 				const number = Number.parseInt(e.code.replace("Digit",""))
 				this.entities[number-1]?.emit("summon");
 			}
